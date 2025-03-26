@@ -3,9 +3,11 @@ package edu.uvg.util;
 import java.io.*;
 
 public class ProductCSVReader {
-
     public static BinarySearchTree<Product> loadProductsIntoBST() {
-        String csvPath = "productos.csv"; // Ruta relativa en la raíz del proyecto
+        // Obtener la ruta absoluta de la carpeta donde se ejecuta el programa
+        String currentDir = System.getProperty("user.dir");
+        String csvPath = currentDir + File.separator + "productos.csv";
+        
         File file = new File(csvPath);
 
         if (!file.exists()) {
