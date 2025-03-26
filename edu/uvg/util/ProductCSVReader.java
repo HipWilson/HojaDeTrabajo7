@@ -1,35 +1,38 @@
 package edu.uvg.util;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
-import java.util.Optional;
+import java.io.*;
 
 public class ProductCSVReader {
-    public static Optional<Product> findProductBySku(String csvPath, String skuToFind) {
-        try (BufferedReader br = new BufferedReader(new FileReader(csvPath))) {
+
+    public static BinarySearchTree<Product> loadProductsIntoBST() {
+        String csvPath = "productos.csv"; // Ruta relativa en la raíz del proyecto
+        File file = new File(csvPath);
+
+        if (!file.exists()) {
+            System.err.println("Error: No se encontró el archivo CSV en: " + file.getAbsolutePath());
+            return new BinarySearchTree<>();
+        }
+
+        BinarySearchTree<Product> bst = new BinarySearchTree<>();
+        try (BufferedReader br = new BufferedReader(new FileReader(file))) {
             String line = br.readLine(); // Saltar encabezado
-            
             while ((line = br.readLine()) != null) {
                 String[] values = splitCSVLine(line);
-
                 if (values.length >= 5) {
-                    String currentSku = values[0].trim();
-                    if (currentSku.equalsIgnoreCase(skuToFind.trim())) {
-                        return Optional.of(new Product(
-                            currentSku,
-                            parseDoubleOrDefault(values[1], 0.0),
-                            parseDoubleOrDefault(values[2], 0.0),
-                            values[3].trim(),
-                            values[4].trim()
-                        ));
-                    }
+                    Product product = new Product(
+                        values[0].trim(),
+                        parseDoubleOrDefault(values[1], 0.0),
+                        parseDoubleOrDefault(values[2], 0.0),
+                        values[3].trim(),
+                        values[4].trim()
+                    );
+                    bst.insert(product);
                 }
             }
         } catch (IOException e) {
             System.err.println("Error al leer el archivo CSV: " + e.getMessage());
         }
-        return Optional.empty();
+        return bst;
     }
 
     private static String[] splitCSVLine(String line) {

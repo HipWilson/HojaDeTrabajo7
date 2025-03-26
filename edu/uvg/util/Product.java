@@ -1,4 +1,5 @@
 package edu.uvg.util;
+
 import java.util.Objects;
 
 public class Product implements Comparable<Product> {
@@ -21,7 +22,6 @@ public class Product implements Comparable<Product> {
         return this.sku.compareTo(other.sku);
     }
 
-    // Getters
     public String getSku() { return sku; }
     public double getPriceRetail() { return priceRetail; }
     public double getPriceCurrent() { return priceCurrent; }
